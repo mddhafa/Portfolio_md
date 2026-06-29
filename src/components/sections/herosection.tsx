@@ -324,7 +324,7 @@ export default function HeroSection({ scrolled }: HeroSectionProps) {
           }}
         >
           <img
-            src="/KAI00257.JPG"
+            src="/Dhafa.jpeg"
             alt="Muhammad Dhafa"
             style={{
               width: "100%", height: "100%", objectFit: "cover",

@@ -137,6 +137,39 @@ export default function AdminProjects() {
     router.push("/admin/login");
   };
 
+
+  const [showChangePassword, setShowChangePassword] = useState(false);
+  const [passwordForm, setPasswordForm] = useState({ currentPassword: "", newPassword: "", confirmPassword: "" });
+  const [changingPassword, setChangingPassword] = useState(false);
+
+  const handleChangePassword = async () => {
+    if (!passwordForm.newPassword.trim()) return showToast("Password baru wajib diisi");
+    if (passwordForm.newPassword !== passwordForm.confirmPassword) return showToast("Konfirmasi password tidak cocok");
+    if (passwordForm.newPassword.length < 6) return showToast("Password minimal 6 karakter");
+
+    setChangingPassword(true);
+    try {
+      const res = await fetch("/api/auth/change-password", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          currentPassword: passwordForm.currentPassword,
+          newPassword: passwordForm.newPassword,
+        }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) return showToast(data.error || "Gagal mengubah password");
+      
+      showToast("Password berhasil diubah");
+      setShowChangePassword(false);
+      setPasswordForm({ currentPassword: "", newPassword: "", confirmPassword: "" });
+    } catch {
+      showToast("Gagal mengubah password");
+    } finally {
+      setChangingPassword(false);
+    }
+  };
   return (
     <div style={{ minHeight: "100vh", background: "var(--bg)", padding: "0" }}>
       {/* Toast */}
@@ -173,6 +206,7 @@ export default function AdminProjects() {
             <p style={{ fontSize: "11px", color: "var(--muted)" }}>Kelola Projects</p>
           </div>
         </div>
+        
         <div style={{ display: "flex", gap: 10 }}>
           <a href="/" target="_blank" style={{
             padding: "8px 16px", borderRadius: "8px",
@@ -182,6 +216,14 @@ export default function AdminProjects() {
           }}>
             Lihat Site ↗
           </a>
+
+          <button onClick={() => setShowChangePassword(true)} style={{
+            padding: "8px 16px", borderRadius: "8px",
+            border: "1px solid var(--border)", background: "transparent",
+            color: "var(--muted)", fontSize: "13px", fontWeight: 600, cursor: "pointer",
+          }}>
+            Ganti Password
+          </button>
           <button onClick={handleLogout} style={{
             padding: "8px 16px", borderRadius: "8px",
             border: "1px solid var(--border)", background: "transparent",
@@ -530,6 +572,80 @@ export default function AdminProjects() {
                 fontSize: "13px", fontWeight: 700, cursor: saving ? "not-allowed" : "pointer",
               }}>
                 {saving ? "Menyimpan..." : form.id ? "Simpan Perubahan" : "Tambah Project"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showChangePassword && (
+        <div style={{
+          position: "fixed", inset: 0, zIndex: 600,
+          background: "rgba(0,0,0,0.5)", backdropFilter: "blur(4px)",
+          display: "flex", alignItems: "center", justifyContent: "center",
+          padding: "24px",
+        }} onClick={(e) => e.target === e.currentTarget && setShowChangePassword(false)}>
+          <div style={{
+            background: "var(--surface)", borderRadius: "20px",
+            border: "1px solid var(--border)",
+            width: "100%", maxWidth: "420px",
+            animation: "scaleIn 0.2s ease-out",
+          }}>
+            {/* Header */}
+            <div style={{
+              padding: "24px 28px 0",
+              display: "flex", alignItems: "center", justifyContent: "space-between",
+            }}>
+              <h3 style={{ fontSize: "17px", fontWeight: 800, letterSpacing: "-0.4px" }}>Ganti Password</h3>
+              <button onClick={() => setShowChangePassword(false)} style={{
+                width: 32, height: 32, borderRadius: "8px",
+                border: "1px solid var(--border)", background: "transparent",
+                color: "var(--muted)", fontSize: "16px", cursor: "pointer",
+                display: "flex", alignItems: "center", justifyContent: "center",
+              }}>×</button>
+            </div>
+
+            {/* Body */}
+            <div style={{ padding: "24px 28px", display: "flex", flexDirection: "column", gap: "14px" }}>
+              {[
+                { label: "Password Lama", key: "currentPassword", placeholder: "Masukkan password lama" },
+                { label: "Password Baru", key: "newPassword", placeholder: "Minimal 6 karakter" },
+                { label: "Konfirmasi Password Baru", key: "confirmPassword", placeholder: "Ulangi password baru" },
+              ].map(({ label, key, placeholder }) => (
+                <div key={key}>
+                  <label style={{ display: "block", fontSize: "11px", fontWeight: 700, color: "var(--muted)", marginBottom: 6, textTransform: "uppercase", letterSpacing: "0.5px" }}>{label}</label>
+                  <input
+                    type="password"
+                    value={(passwordForm as any)[key]}
+                    onChange={(e) => setPasswordForm({ ...passwordForm, [key]: e.target.value })}
+                    placeholder={placeholder}
+                    style={{
+                      width: "100%", padding: "10px 14px",
+                      background: "var(--bg)", border: "1px solid var(--border)",
+                      borderRadius: "10px", color: "var(--text)", fontSize: "14px", outline: "none",
+                    }}
+                    onFocus={(e) => e.target.style.borderColor = "var(--text)"}
+                    onBlur={(e) => e.target.style.borderColor = "var(--border)"}
+                  />
+                </div>
+              ))}
+            </div>
+
+            {/* Footer */}
+            <div style={{ padding: "0 28px 24px", display: "flex", gap: 10, justifyContent: "flex-end" }}>
+              <button onClick={() => setShowChangePassword(false)} style={{
+                padding: "10px 20px", borderRadius: "10px",
+                border: "1px solid var(--border)", background: "transparent",
+                color: "var(--muted)", fontSize: "13px", fontWeight: 600, cursor: "pointer",
+              }}>Batal</button>
+              <button onClick={handleChangePassword} disabled={changingPassword} style={{
+                padding: "10px 24px", borderRadius: "10px",
+                background: changingPassword ? "var(--muted)" : "var(--text)",
+                color: "var(--bg)", border: "none",
+                fontSize: "13px", fontWeight: 700,
+                cursor: changingPassword ? "not-allowed" : "pointer",
+              }}>
+                {changingPassword ? "Menyimpan..." : "Simpan"}
               </button>
             </div>
           </div>

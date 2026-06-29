@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useI18n } from "@/lib/i18n";
 import NavbarAbout from "@/components/layout/navbarAbout";
 import Footer from "@/components/layout/footer";
-import {GitHubCalendar} from "react-github-calendar";
+import {GitHubCalendar} from "react-github-calendar"; // Diperbaiki: Biasanya impor default, bukan bernama { GitHubCalendar }
 
 export default function AboutSection() {
   const { t } = useI18n();
@@ -12,33 +12,17 @@ export default function AboutSection() {
   const aboutRef = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   const [hoveredBtn, setHoveredBtn] = useState(false);
-
   const [isMounted, setIsMounted] = useState(false);
-
-  const [projectCount, setProjectCount] = useState(0);
+  const [projectCount, setProjectCount] = useState<number | null>(null); // State awal null untuk indikasi loading
 
   useEffect(() => {
+    setIsMounted(true);
+
     fetch("/api/projects")
       .then(res => res.json())
       .then(data => setProjectCount(Array.isArray(data) ? data.length : 0))
-      .catch(() => {});
-  }, []);
+      .catch(() => setProjectCount(0));
 
-  useEffect(() => {
-    // Set mounted menjadi true setelah komponen masuk ke browser
-    setIsMounted(true);
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) setVisible(true);
-      },
-      { threshold: 0.1, rootMargin: "0px 0px -80px 0px" }
-    );
-    if (aboutRef.current) observer.observe(aboutRef.current);
-    return () => observer.disconnect();
-  }, []);
-
-  useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) setVisible(true);
@@ -57,7 +41,7 @@ export default function AboutSection() {
         </svg>
       ),
       label: "+62 896-2783-8251",
-      link: "https://wa.me/6289627838251", // Link WhatsApp langsung chat
+      link: "https://wa.me/6289627838251",
     },
     {
       icon: (
@@ -77,33 +61,28 @@ export default function AboutSection() {
         </svg>
       ),
       label: "dhafaa19",
-      link: "https://instagram.com/dhafaa19", // Link Instagram profile
+      link: "https://instagram.com/dhafaa19",
     },
     {
         icon: (
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
-                    <rect x="2" y="9" width="4" height="12"/>
-                    <circle cx="4" cy="4" r="2"/>
-                  </svg>
-          ),
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+            <rect x="2" y="9" width="4" height="12"/>
+            <circle cx="4" cy="4" r="2"/>
+          </svg>
+        ),
         label: "Muhammad Dhafa",
-        link: "https://linkedin.com/in/mddhafa" // Link LinkedIn profile
+        link: "https://linkedin.com/in/mddhafa"
     },
     {
         icon: (
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
-            </svg>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
+          </svg>
         ),
         label: "mddhafa",
-        link: "https://twitter.com/mddhafa" // Link Twitter profile
+        link: "https://twitter.com/mddhafa"
     }
-  ];
-
-  const stats = [
-    ["02+", "Years Experience"],
-    [`0${projectCount}+`, "Projects Completed"],
   ];
 
   return (
@@ -114,6 +93,7 @@ export default function AboutSection() {
       style={{ padding: "100px 40px", maxWidth: 1200, margin: "0 auto" }}
     >
       <NavbarAbout />
+      
       {/* Eyebrow */}
       <p
         style={{
@@ -163,18 +143,8 @@ export default function AboutSection() {
               justifyContent: "center",
             }}
           >
-            {/* <span
-              style={{
-                fontSize: 48,
-                fontWeight: 900,
-                color: "var(--muted)",
-                letterSpacing: "-2px",
-              }}
-            >
-              MD
-            </span> */}
             <img
-              src="/KAI00257.JPG"
+              src="/Dhafa.jpeg"
               alt="Muhammad Dhafa"
               style={{
                 width: "100%",
@@ -239,9 +209,7 @@ export default function AboutSection() {
           {/* Info rows */}
           <div style={{ display: "flex", flexDirection: "column", gap: 10, marginBottom: 20 }}>
             {infoRows.map((row, i) => {
-              // Menentukan pembungkus komponen (apakah berupa link 'a' atau text 'div')
               const Component = row.link ? "a" : "div";
-              
               return (
                 <Component
                   key={i}
@@ -253,7 +221,6 @@ export default function AboutSection() {
                     alignItems: "center",
                     gap: 10,
                     fontSize: 13,
-                    // color: row.muted ? "var(--muted)" : "var(--text)",
                     textDecoration: "none",
                     cursor: row.link ? "pointer" : "default",
                   }}
@@ -272,49 +239,34 @@ export default function AboutSection() {
 
           {/* Stats */}
           <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
-            {stats.map(([num, label], i) => (
-              <div key={i}>
-                <div
-                  style={{
-                    display: "flex",
-                    justifyContent: "space-between",
-                    alignItems: "baseline",
-                    padding: "10px 0",
-                  }}
-                >
-                  <span
-                    style={{
-                      fontSize: 30,
-                      fontWeight: 900,
-                      letterSpacing: "-2px",
-                      color: "var(--text)",
-                      lineHeight: 1,
-                    }}
-                  >
-                    {num}
-                  </span>
-                  <span
-                    style={{
-                      fontSize: 11,
-                      color: "var(--muted)",
-                      fontWeight: 500,
-                      textAlign: "right",
-                      lineHeight: 1.4,
-                    }}
-                  >
-                    {label.split(" ").map((w, j) => (
-                      <span key={j}>
-                        {w}
-                        {j === 0 ? <br /> : ""}
-                      </span>
-                    ))}
-                  </span>
-                </div>
-                {i < stats.length - 1 && (
-                  <div style={{ height: 1, background: "var(--border)" }} />
-                )}
+            {/* Stat 1: Experience */}
+            <div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", padding: "10px 0" }}>
+                <span style={{ fontSize: 30, fontWeight: 900, letterSpacing: "-2px", color: "var(--text)", lineHeight: 1 }}>
+                  02+
+                </span>
+                <span style={{ fontSize: 11, color: "var(--muted)", fontWeight: 500, textAlign: "right", lineHeight: 1.4 }}>
+                  Years<br />Experience
+                </span>
               </div>
-            ))}
+              <div style={{ height: 1, background: "var(--border)" }} />
+            </div>
+
+            {/* Stat 2: Projects (With Skeleton Handling) */}
+            <div>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "10px 0", minHeight: 52 }}>
+                {!isMounted || projectCount === null ? (
+                  <div className="skeleton-pulse" style={{ width: 50, height: 30, backgroundColor: "var(--border)", borderRadius: 4 }} />
+                ) : (
+                  <span style={{ fontSize: 30, fontWeight: 900, letterSpacing: "-2px", color: "var(--text)", lineHeight: 1 }}>
+                    {projectCount < 10 ? `0${projectCount}+` : `${projectCount}+`}
+                  </span>
+                )}
+                <span style={{ fontSize: 11, color: "var(--muted)", fontWeight: 500, textAlign: "right", lineHeight: 1.4 }}>
+                  Projects<br />Completed
+                </span>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -331,52 +283,16 @@ export default function AboutSection() {
               animation: visible ? "slideUp 0.5s ease-out 0.15s backwards" : "none",
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                marginBottom: 14,
-              }}
-            >
-              <div
-                style={{
-                  width: 3,
-                  height: 16,
-                  background: "var(--text)",
-                  borderRadius: 2,
-                }}
-              />
-              <span
-                style={{
-                  fontSize: 10,
-                  fontWeight: 700,
-                  letterSpacing: "2px",
-                  textTransform: "uppercase",
-                  color: "var(--muted)",
-                }}
-              >
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 14 }}>
+              <div style={{ width: 3, height: 16, background: "var(--text)", borderRadius: 2 }} />
+              <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)" }}>
                 About Me
               </span>
             </div>
-            <h3
-              style={{
-                fontSize: 20,
-                fontWeight: 900,
-                letterSpacing: "-0.5px",
-                color: "var(--text)",
-                marginBottom: 12,
-              }}
-            >
+            <h3 style={{ fontSize: 20, fontWeight: 900, letterSpacing: "-0.5px", color: "var(--text)", marginBottom: 12 }}>
               Hi, I'm Muhammad Dhafa
             </h3>
-            <p
-              style={{
-                fontSize: 14,
-                color: "var(--muted)",
-                lineHeight: 1.85,
-              }}
-            >
+            <p style={{ fontSize: 14, color: "var(--muted)", lineHeight: 1.85 }}>
               {t.about.description}
             </p>
           </div>
@@ -392,31 +308,9 @@ export default function AboutSection() {
               animation: visible ? "slideUp 0.5s ease-out 0.2s backwards" : "none",
             }}
           >
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: 8,
-                marginBottom: 20,
-              }}
-            >
-              <div
-                style={{
-                  width: 3,
-                  height: 16,
-                  background: "var(--text)",
-                  borderRadius: 2,
-                }}
-              />
-              <span
-                style={{
-                  fontSize: 10,
-                  fontWeight: 700,
-                  letterSpacing: "2px",
-                  textTransform: "uppercase",
-                  color: "var(--muted)",
-                }}
-              >
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20 }}>
+              <div style={{ width: 3, height: 16, background: "var(--text)", borderRadius: 2 }} />
+              <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "2px", textTransform: "uppercase", color: "var(--muted)" }}>
                 {t.about.approachTitle}
               </span>
             </div>
@@ -428,9 +322,7 @@ export default function AboutSection() {
                     display: "flex",
                     alignItems: "flex-start",
                     gap: 12,
-                    animation: visible
-                      ? `slideUp 0.5s ease-out ${0.25 + i * 0.07}s backwards`
-                      : "none",
+                    animation: visible ? `slideUp 0.5s ease-out ${0.25 + i * 0.07}s backwards` : "none",
                   }}
                 >
                   <span
@@ -452,22 +344,13 @@ export default function AboutSection() {
                   >
                     0{i + 1}
                   </span>
-                  <p
-                    style={{
-                      fontSize: 13,
-                      color: "var(--text)",
-                      lineHeight: 1.7,
-                      fontWeight: 500,
-                    }}
-                  >
+                  <p style={{ fontSize: 13, color: "var(--text)", lineHeight: 1.7, fontWeight: 500 }}>
                     {item}
                   </p>
                 </div>
               ))}
             </div>
           </div>
-
-
 
           {/* BLOK GITHUB CONTRIBUTIONS CALENDAR */}
           <div
@@ -488,8 +371,7 @@ export default function AboutSection() {
               </span>
             </div>
             
-            <div style={{ minWidth: 700, minHeight: 120 }}> 
-              {/* 2. Kondisikan render kalender hanya jika isMounted bernilai true */}
+            <div style={{ minWidth: 700, minHeight: 120, display: "flex", alignItems: "center" }}> 
               {isMounted ? (
                 <GitHubCalendar 
                   username="mddhafa"
@@ -502,11 +384,10 @@ export default function AboutSection() {
                   }}
                 />
               ) : (
-                /* Tampilkan teks loading atau placeholder kosong dengan tinggi yang sama agar layout tidak melompat */
-                <div style={{ color: "var(--muted)", fontSize: 13 }}>Loading contributions...</div>
+                <div className="skeleton-pulse" style={{ width: "100%", height: 110, backgroundColor: "var(--border)", borderRadius: 8 }} />
               )}
             </div>
-            </div>
+          </div>
 
           {/* Quote */}
           <div
@@ -519,14 +400,7 @@ export default function AboutSection() {
               animation: visible ? "slideUp 0.5s ease-out 0.3s backwards" : "none",
             }}
           >
-            <p
-              style={{
-                fontSize: 13,
-                color: "var(--muted)",
-                lineHeight: 1.85,
-                fontStyle: "italic",
-              }}
-            >
+            <p style={{ fontSize: 13, color: "var(--muted)", lineHeight: 1.85, fontStyle: "italic" }}>
               "Technology is not just a tool; it is the bridge between creativity and innovation that shapes the future."
             </p>
           </div>
@@ -541,6 +415,13 @@ export default function AboutSection() {
         .info-link:hover {
           color: var(--text) !important;
           text-decoration: underline;
+        }
+        @keyframes skeletonPulseAnimation {
+          0%, 100% { opacity: 0.5; }
+          50% { opacity: 1; }
+        }
+        .skeleton-pulse {
+          animation: skeletonPulseAnimation 1.5s ease-in-out infinite !important;
         }
         @media (max-width: 768px) {
           section#about {
@@ -562,6 +443,6 @@ export default function AboutSection() {
       `}</style>
     </section>
     <Footer />
-      </>
+    </>
   );
 }

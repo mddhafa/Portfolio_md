@@ -7,8 +7,8 @@ export async function POST(req: NextRequest) {
   try {
     const { email, password } = await req.json();
 
-    const [rows]: any = await pool.query(
-      'SELECT * FROM users WHERE email = ?', [email]
+    const {rows}: any = await pool.query(
+      'SELECT * FROM users WHERE email = $1', [email]
     );
 
     if (!rows.length) {
