@@ -15,7 +15,7 @@ const en = {
 
     about: {
         title: "About Me",
-        description: "I am Muhammad Dhafa, a fresh graduate in Information Technology from Universitas Muhammadiyah Yogyakarta. I have a strong interest in software development, particularly in backend systems and intelligent applications. During my studies, I actively worked on several projects involving REST API development, mobile applications, and AI-based systems, which strengthened both my technical and problem-solving skills. I am highly motivated to start my professional career and contribute to real-world projects.",
+        description: "I am Muhammad Dhafa, a highly motivated Information Technology graduate from Universitas Muhammadiyah Yogyakarta and a BNSP-Certified Programmer. I have a strong passion for software development, specializing in backend systems and mobile applications. Throughout my studies, I have actively developed various projects involving REST APIs, mobile applications, and AI-driven systems, which has sharpened my technical expertise and problem-solving skills. I am eager to launch my professional career and contribute effectively to real-world software engineering projects.",
         approachTitle: "My Approach",
         approachItems: [
             "In-depth analysis of user needs and project goals.",

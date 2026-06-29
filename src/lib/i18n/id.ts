@@ -15,7 +15,7 @@ const id = {
 
     about: {
         title: "Tentang Saya",
-        description: "Saya Muhammad Dhafa, lulusan baru di bidang Teknologi Informasi dari Universitas Muhammadiyah Yogyakarta. Saya memiliki minat yang kuat dalam pengembangan perangkat lunak, terutama dalam sistem backend dan aplikasi cerdas. Selama studi saya, saya secara aktif mengerjakan beberapa proyek yang melibatkan pengembangan REST API, aplikasi seluler, dan sistem berbasis AI, yang memperkuat keterampilan teknis dan pemecahan masalah saya. Saya sangat termotivasi untuk memulai karir profesional saya dan berkontribusi pada proyek-proyek dunia nyata.",
+        description: "Saya Muhammad Dhafa, lulusan baru di bidang Teknologi Informasi dari Universitas Muhammadiyah Yogyakarta yang telah Tersertifikasi Programmer oleh BNSP. Saya memiliki minat yang kuat dalam pengembangan perangkat lunak, terutama dalam sistem backend dan aplikasi mobile. Selama studi saya, saya secara aktif mengerjakan beberapa proyek yang melibatkan pengembangan REST API, aplikasi seluler, dan sistem berbasis AI, yang memperkuat keterampilan teknis dan pemecahan masalah saya. Saya sangat termotivasi untuk memulai karir profesional saya dan berkontribusi pada proyek-proyek dunia nyata.",
         approachTitle: "Pendekatan Saya",
         approachItems: [
             "Analisis kebutuhan pengguna dan tujuan proyek secara mendalam.",
