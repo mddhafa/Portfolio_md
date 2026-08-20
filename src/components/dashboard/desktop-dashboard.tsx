@@ -1,16 +1,10 @@
 "use client";
 
 import {
-  Code2,
   FileText,
-  FolderOpen,
-  GitFork,
-  Globe2,
   House,
   Mail,
   Minus,
-  Settings2,
-  TerminalSquare,
   Trash2,
   Volume2,
   Wifi,
@@ -18,6 +12,7 @@ import {
   Maximize2,
 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+import ProjectSection from "@/components/sections/projectsection";
 import styles from "./desktop-dashboard.module.css";
 
 type WindowName =
@@ -36,22 +31,6 @@ type WindowState = {
   maximized: boolean;
   zIndex: number;
 };
-
-function AppIcon({
-  src,
-  alt,
-}: {
-  src: string;
-  alt: string;
-}) {
-  return (
-    <img
-      src={src}
-      alt={alt}
-      draggable={false}
-    />
-  );
-}
 
 const INITIAL_WINDOWS: Record<WindowName, WindowState> = {
   files: {
@@ -237,8 +216,6 @@ export default function DesktopDashboard() {
 
     focusWindow(id);
 
-    const rect = workspace.getBoundingClientRect();
-
     const startMouseX = event.clientX;
     const startMouseY = event.clientY;
 
@@ -303,62 +280,7 @@ export default function DesktopDashboard() {
    */
   const renderWindowContent = (id: WindowName) => {
     if (id === "files") {
-      return (
-        <>
-          <div className={styles.fileHeader}>
-            <FolderOpen />
-            <div>
-              <strong>Projects</strong>
-              <span>~/Projects</span>
-            </div>
-          </div>
-
-          <div className={styles.projectGrid}>
-            <div className={styles.projectFolder}>
-              <div className={styles.folderIcon}>
-                <FolderOpen />
-              </div>
-              <strong>Web Development</strong>
-              <small>React · Next.js · Node.js</small>
-            </div>
-
-            <div className={styles.projectFolder}>
-              <div className={styles.folderIcon}>
-                <FolderOpen />
-              </div>
-              <strong>Mobile Development</strong>
-              <small>Kotlin · Jetpack Compose</small>
-            </div>
-
-            <div className={styles.projectFolder}>
-              <div className={styles.folderIcon}>
-                <FolderOpen />
-              </div>
-              <strong>AI Projects</strong>
-              <small>Python · FastAPI · ML</small>
-            </div>
-
-            <div className={styles.projectFolder}>
-              <div className={styles.folderIcon}>
-                <FolderOpen />
-              </div>
-              <strong>Experiments</strong>
-              <small>Ideas · Prototypes · Research</small>
-            </div>
-          </div>
-
-          <div className={styles.featuredProject}>
-            <Code2 />
-            <div>
-              <strong>Prediksi Depresi Persalinan</strong>
-              <p>
-                AI-powered screening application
-                dengan React, FastAPI, Python, dan MySQL.
-              </p>
-            </div>
-          </div>
-        </>
-      );
+      return <ProjectSection />;
     }
 
     if (id === "terminal") {
