@@ -7,6 +7,7 @@ import { useState, useEffect, useRef } from "react";
 import SkillSection from "@/components/sections/skillsection";
 import ProjectSection from "@/components/sections/projectsection";
 import Footer from "@/components/layout/footer";
+import BootScreen from "@/components/ui/boot-screen";
 
 
 
@@ -41,6 +42,7 @@ export default function Home() {
   return (
     <div>
       <link rel="icon" href="/favicon.png" />
+        <BootScreen />
         <Navbar />
         <HeroSection />
         {/* <AboutSection /> */}
