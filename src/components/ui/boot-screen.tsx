@@ -18,7 +18,7 @@ export default function BootScreen() {
 
   const finishBoot = () => {
     setIsLeaving(true);
-    window.setTimeout(() => setIsVisible(false), 800);
+    window.setTimeout(() => setIsVisible(false), 1000);
   };
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function BootScreen() {
     const messages = bootMessages.slice(1).map((_, index) =>
       window.setTimeout(() => setMessageIndex(index + 1), (index + 1) * 560),
     );
-    const finishTimer = window.setTimeout(finishBoot, 2400);
+    const finishTimer = window.setTimeout(finishBoot, 4000);
 
     return () => {
       messages.forEach(window.clearTimeout);
@@ -70,7 +70,7 @@ export default function BootScreen() {
             priority
           />
         </div>
-        <p className={styles.brand}>muhammad dhafa</p>
+        <p className={styles.brand}>WELCOME</p>
 
         <div className={styles.terminal}>
           <span className={styles.prompt}>dhafa@portfolio:~$</span>
